@@ -1,34 +1,36 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, HttpCode } from '@nestjs/common';
 import { AirlineService } from './airline.service';
 import { CreateAirlineDto } from './dto/create-airline.dto';
 import { UpdateAirlineDto } from './dto/update-airline.dto';
 
-@Controller('airline')
+@Controller('airlines')
 export class AirlineController {
   constructor(private readonly airlineService: AirlineService) {}
 
-  @Post()
-  create(@Body() createAirlineDto: CreateAirlineDto) {
-    return this.airlineService.create(createAirlineDto);
-  }
-
   @Get()
-  findAll() {
-    return this.airlineService.findAll();
+  async findAll() {
+    return await this.airlineService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.airlineService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.airlineService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAirlineDto: UpdateAirlineDto) {
-    return this.airlineService.update(+id, updateAirlineDto);
+  @Post()
+  async create(@Body() createAirlineDto: CreateAirlineDto) {
+    return await this.airlineService.create(createAirlineDto);
+  }
+
+  @Put(':id')
+  async update(@Param('id') id: string, @Body() updateAirlineDto: UpdateAirlineDto) {
+    return await this.airlineService.update(id, updateAirlineDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.airlineService.remove(+id);
+  @HttpCode(204)
+  async remove(@Param('id') id: string) {
+    return await this.airlineService.remove(id);
   }
+  
 }
